@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['admin', 'volunteer'])->default('admin');
+            $table->string('status')->default('active');
+            $table->timestamp('last_login_at')->nullable();
+            $table->boolean('is_deleted')->default(false);
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });
