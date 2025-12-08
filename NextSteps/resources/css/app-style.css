@@ -1,0 +1,110 @@
+/* General Layout & Colors */
+body { font-family: Arial, sans-serif; background-color: #f7f9fc; margin: 0; padding: 0; }
+.page-container { padding: 20px; }
+.user-management-panel {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+/* Header Controls (Search, Filter, Add Button) */
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+.header-controls form, .header-controls select { margin-right: 15px; }
+.header-controls input[type="text"], .header-controls select {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 250px;
+}
+.button-primary {
+    background-color: #3b82f6; 
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Table Styling */
+h2 { font-size: 1.5rem; color: #333; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.95rem; }
+thead th { background-color: #f4f6f8; color: #4b5563; padding: 12px 15px; text-align: left; border-bottom: 2px solid #ddd; font-weight: 600; }
+tbody td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+
+/* Role & Status Tag Styling (External CSS only, no inline styles) */
+.role-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem; }
+.role-admin { background-color: #f3e8ff; color: #9333ea; }
+.role-volunteer { background-color: #e5e7eb; color: #4b5563; }
+.status-active { color: #10b981; }
+.status-inactive { color: #f97316; }
+
+/* Actions */
+.inline-form { display: inline; margin-left: 10px; }
+.actions a { color: #3b82f6; text-decoration: none; margin-right: 10px; }
+.actions button { color: #ef4444; background: none; border: none; padding: 0; cursor: pointer; font-size: 0.95rem; }
+
+/* ADD TO public/css/app-style.css */
+
+.back-link { display: inline-block; margin-bottom: 20px; color: #3b82f6; text-decoration: none; }
+
+.crud-form { padding: 20px 0; max-width: 500px; }
+.form-group { margin-bottom: 15px; }
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #4b5563;
+}
+
+.crud-form input[type="text"], 
+.crud-form input[type="email"], 
+.crud-form input[type="password"],
+.crud-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.error-message {
+    color: #ef4444; /* Red */
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+
+.password-note {
+    font-style: italic;
+    color: #666;
+    margin-top: -10px;
+}
+
+.submit-btn {
+    width: auto;
+    min-width: 150px;
+    margin-top: 20px;
+}
+
+.alert-danger {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
