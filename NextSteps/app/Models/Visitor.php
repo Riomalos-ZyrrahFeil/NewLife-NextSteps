@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Visitor extends Model
 {
@@ -53,5 +54,10 @@ class Visitor extends Model
     public function volunteer()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
+    public function stageStatuses(): HasMany
+    {
+        return $this->hasMany(MessageStatus::class, 'visitor_id', 'visitor_id');
     }
 }

@@ -58,4 +58,37 @@ function assignTo(volunteerId) {
   }).then(res => {
     if (res.ok) window.location.reload();
   });
+
+  function updateStatus(visitorId, status) {
+      // Retrieve the CSRF token from the meta tag
+      const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      fetch('/admin/guest-tracker/status', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json', // Forces JSON response even on errors
+              'X-CSRF-TOKEN': token
+          },
+          body: JSON.stringify({ 
+              visitor_id: visitorId, 
+              status: status 
+          })
+      })
+      .then(async response => {
+          const isJson = response.headers.get('content-type')?.includes('application/json');
+          const data = isJson ? await response.json() : null;
+
+          if (!response.ok) {
+              const error = (data && data.message) || response.status;
+              return Promise.reject(error);
+          }
+
+          console.log('Status updated successfully:', data);
+      })
+      .catch(error => {
+          console.error('Error updating status:', error);
+          alert('Failed to update status. Check console for details.');
+      });
+  }
 }

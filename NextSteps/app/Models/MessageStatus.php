@@ -12,9 +12,8 @@ class MessageStatus extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'visitor_id',
+        'visitor_id', 
         'follow_up_stage_id',
-        'scheduled_date',
         'status'
     ];
 

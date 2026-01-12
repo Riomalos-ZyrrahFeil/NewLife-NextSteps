@@ -74,7 +74,10 @@
             </td>
             <td>
               Day 5<br>
-              <a href="#" class="action-link">View Tracker</a>
+              <a href="{{ route('admin.guest_tracker.index', ['search' => $visitor->first_name . ' ' . $visitor->last_name]) }}" 
+                  class="view-tracker-link">
+                  View Tracker
+            </a>
             </td>
             <td>
               @php
