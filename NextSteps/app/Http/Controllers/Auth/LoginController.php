@@ -4,36 +4,60 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use \Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-	use AuthenticatesUsers;
+    public function username()
+    {
+        return 'email';
+    }
 
-	public function redirectTo()
-	{
-		$intendedUrl = session()->pull('url.intended');
+    public function redirectTo()
+    {
+        $user = Auth::user();
 
-		$user = auth()->user();
+        if ($user->role === 'admin') {
+            return route('admin.users.index'); 
+        }
 
-		if ($user->role === 'admin') {
-			return '/admin/users';
-		}
+        return route('dashboard');
+    }
 
-		if ($user->role === 'volunteer') {
-			return '/dashboard';
-		}
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
 
-		return '/home'; 
-	}
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
 
-	public function __construct()
-	{
-		$this->middleware('guest')->except('logout');
-	}
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email', 
+            'password' => 'required|string',
+        ]);
 
-	public function showLoginForm()
-	{
-		return view('auth.login');
-	}
+        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+            $request->session()->regenerate();
+
+            return redirect()->intended($this->redirectTo());
+        }
+
+        throw ValidationException::withMessages([
+            'email' => [trans('auth.failed')],
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login');
+    }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 
 // --- AUTHENTICATION ROUTES ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -16,8 +17,9 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('/dashboard'); 
-    })->name('/dashboard'); 
+        $users = User::all(); 
+        return view('dashboard', compact('users')); 
+    })->name('dashboard'); 
 
     Route::resource('admin/users', UserController::class)
         ->except(['show'])

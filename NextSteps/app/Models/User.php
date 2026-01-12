@@ -2,80 +2,80 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Scopes\ActiveUserScope;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    /**
+     * The table associated with the model.
+     */
+    protected $table = 'tbl_user';
+    protected $primaryKey = 'user_id';
 
     protected static function booted()
     {
-        // 2. Apply the scope globally upon booting the model.
         static::addGlobalScope(new ActiveUserScope);
     }
-    
-    // --- 3. CUSTOM DELETE/RESTORE METHODS (Mimics Soft Deletes) ---
-    
-    // Override the default delete() method to set is_deleted = true
+
     public function delete()
     {
-        $this->is_deleted = true;
+        $this->is_deleted = 1;
         return $this->save();
     }
     
-    // Method to restore the user
     public function restore()
     {
-        $this->is_deleted = false;
+        $this->is_deleted = 0;
         return $this->save();
     }
     
-    // Define a scope to pull records that ARE deleted (the opposite of the global scope)
     public function scopeArchived(Builder $query)
     {
-        // We use withoutGlobalScope() to bypass the 'is_deleted = false' rule
-        return $query->withoutGlobalScope(ActiveUserScope::class)->where('is_deleted', true);
+        return $query->withoutGlobalScope(ActiveUserScope::class)->where('is_deleted', 1);
     }
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * Maps to tbl_user columns
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'status'
+    public $timestamps = false; 
+    const CREATED_AT = 'created_at';
 
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'email',
+        'password_hash',
+        'role',
+        'status',
+        'is_deleted'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
+        'password_hash',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'created_at' => 'datetime',
+            'password_hash' => 'hashed',    
         ];
     }
 }

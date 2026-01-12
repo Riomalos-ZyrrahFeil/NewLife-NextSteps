@@ -15,9 +15,9 @@ class UserController extends Controller
 
     if ($request->filled('search')) {
       $searchTerm = '%' . $request->input('search') . '%';
-
       $query->where(function ($q) use ($searchTerm) {
-          $q->where('name', 'like', $searchTerm)
+          $q->where('first_name', 'like', $searchTerm)
+            ->orWhere('last_name', 'like', $searchTerm)
             ->orWhere('email', 'like', $searchTerm);
       });
     }
@@ -26,7 +26,11 @@ class UserController extends Controller
       $query->where('status', $request->input('filter_status'));
     }
 
-    $users = $query->orderBy('name', 'asc')->get();
+    $users = $query
+            ->orderByRaw("CASE WHEN role = 'admin' THEN 0 ELSE 1 END ASC")
+            ->orderBy('last_name', 'asc')
+            ->get();
+
     return view('admin.users', compact('users'));
   }
 
@@ -39,22 +43,25 @@ class UserController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'name' => ['required', 'string', 'max:255'],
-      'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-      'password' => ['required', 'string', 'min:8', 'confirmed'], 
-      'role' => ['required', Rule::in(['admin', 'volunteer'])], 
+      'first_name' => ['required', 'string', 'max:100'],
+      'last_name' => ['required', 'string', 'max:100'],
+      'email' => ['required', 'string', 'email',
+                'max:100', 'unique:tbl_user,email'],
+      'password' => ['required', 'string', 'min:8', 'confirmed'],
+      'role' => ['required', Rule::in(['admin', 'volunteer'])],
     ]);
 
     User::create([
-      'name' => $request->name,
+      'first_name' => $request->first_name,
+      'last_name' => $request->last_name,
       'email' => $request->email,
-      'password' => Hash::make($request->password), 
+      'password_hash' => Hash::make($request->password),
       'role' => $request->role,
-      'status' => 'active', 
+      'status' => 'active',
     ]);
 
     return redirect()->route('admin.users.index')
-      ->with('success', 'New account created successfully!');
+      ->with('success', 'User created!');
   }
 
   public function edit(User $user)
@@ -67,20 +74,28 @@ class UserController extends Controller
   public function update(Request $request, User $user)
   {
     $request->validate([
-      'name' => ['required', 'string', 'max:255'],
-      'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+      'first_name' => ['required', 'string', 'max:100'],
+      'last_name' => ['required', 'string', 'max:100'],
+      'email' => [
+        'required', 
+        'string', 
+        'email', 
+        'max:100', 
+        Rule::unique('tbl_user')->ignore($user->user_id, 'user_id')
+      ],
       'role' => ['required', Rule::in(['admin', 'volunteer'])],
       'status' => ['required', Rule::in(['active', 'inactive'])],
       'password' => ['nullable', 'string', 'min:8', 'confirmed'],
     ]);
 
-    $user->name = $request->name;
+    $user->first_name = $request->first_name;
+    $user->last_name = $request->last_name;
     $user->email = $request->email;
     $user->role = $request->role;
     $user->status = $request->status;
 
     if ($request->filled('password')) {
-      $user->password = Hash::make($request->password);
+      $user->password_hash = Hash::make($request->password);
     }
 
     $user->save();
@@ -91,7 +106,9 @@ class UserController extends Controller
 
   public function destroy(User $user)
   {
-    $user->delete();
-    return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+      $user->delete();
+
+      return redirect()->route('admin.users.index')
+          ->with('success', 'User deleted successfully.');
   }
 }
