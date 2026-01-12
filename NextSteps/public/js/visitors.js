@@ -67,7 +67,7 @@ function assignTo(volunteerId) {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
-              'Accept': 'application/json', // Forces JSON response even on errors
+              'Accept': 'application/json',
               'X-CSRF-TOKEN': token
           },
           body: JSON.stringify({ 

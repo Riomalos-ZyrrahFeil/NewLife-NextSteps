@@ -20,38 +20,45 @@ class VisitorController extends Controller
 
   public function index(Request $request)
   {
-    $latestAssignmentIds = DB::table('tbl_task_assignment')
-      ->select('visitor_id', DB::raw('MAX(task_assignment_id) as latest_id'))
-      ->groupBy('visitor_id');
+      $stages = \DB::table('tbl_follow_up_stages')
+          ->orderBy('day_offset', 'asc')
+          ->get();
 
-    $query = Visitor::leftJoinSub($latestAssignmentIds,
-                'latest_log', function ($join) {
-        $join->on('tbl_visitor.visitor_id', '=', 'latest_log.visitor_id');
-      })
-      ->leftJoin('tbl_task_assignment', 'latest_log.latest_id', '=',
-                'tbl_task_assignment.task_assignment_id')
-      ->leftJoin('tbl_user', 'tbl_task_assignment.user_id', '=',
-                'tbl_user.user_id')
-      ->select(
-        'tbl_visitor.*', 
-        'tbl_user.first_name as v_fname', 
-        'tbl_user.last_name as v_lname'
-      );
+      $query = \App\Models\Visitor::with(['stageStatuses'])
+          ->leftJoin(\DB::raw('(
+              SELECT visitor_id, MAX(task_assignment_id) as latest_id 
+              FROM tbl_task_assignment 
+              GROUP BY visitor_id
+          ) as latest_log'), 'tbl_visitor.visitor_id', '=', 'latest_log.visitor_id')
+          ->leftJoin(
+              'tbl_task_assignment', 
+              'latest_log.latest_id', 
+              '=', 
+              'tbl_task_assignment.task_assignment_id'
+          )
+          ->leftJoin(
+              'tbl_user', 
+              'tbl_task_assignment.user_id', 
+              '=',
+              'tbl_user.user_id'
+          )
+          ->select(
+              'tbl_visitor.*', 
+              'tbl_user.first_name as v_fname', 
+              'tbl_user.last_name as v_lname'
+          );
 
-    if ($request->filled('search')) {
-      $search = $request->search;
-      $query->where(function($q) use ($search) {
-        $q->where('tbl_visitor.first_name', 'LIKE', "%{$search}%")
-          ->orWhere('tbl_visitor.last_name', 'LIKE', "%{$search}%")
-          ->orWhere('tbl_visitor.contact_number', 'LIKE', "%{$search}%");
-      });
-    }
+      if ($request->filled('search')) {
+          $search = $request->search;
+          $query->where(function($q) use ($search) {
+              $q->where('tbl_visitor.first_name', 'LIKE', "%{$search}%")
+                ->orWhere('tbl_visitor.last_name', 'LIKE', "%{$search}%")
+                ->orWhere('tbl_visitor.contact_number', 'LIKE', "%{$search}%");
+          });
+      }
 
-    $visitors = $query->orderBy('tbl_visitor.visitor_id', 'desc')
-      ->paginate(5)
-      ->withQueryString();
-
-    return view('admin.visitors.visitor', compact('visitors'));
+      $visitors = $query->orderBy('tbl_visitor.visitor_id', 'desc')->paginate(10);
+      return view('admin.visitors.visitor', compact('visitors', 'stages'));
   }
 
   public function import(Request $request)
