@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/partials-style/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/partials-style/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/crud-style.css') }}">
+    @yield('styles')
 </head>
 <body>
     <div class="admin-wrapper">

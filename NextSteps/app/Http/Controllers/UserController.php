@@ -111,4 +111,25 @@ class UserController extends Controller
       return redirect()->route('admin.users.index')
           ->with('success', 'User deleted successfully.');
   }
+
+  public function search(Request $request)
+  {
+    $query = $request->get('q');
+
+    $volunteers = User::where('status', 'active')
+      ->where('role', 'volunteer')
+      ->where(function($q) use ($query) {
+        $q->where('first_name', 'LIKE', "%{$query}%")
+          ->orWhere('last_name', 'LIKE', "%{$query}%");
+      })
+      ->get()
+      ->map(function($user) {
+        return [
+          'user_id'   => $user->user_id,
+          'full_name' => $user->first_name . ' ' . $user->last_name
+        ];
+      });
+
+    return response()->json($volunteers);
+  }
 }

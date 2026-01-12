@@ -10,18 +10,23 @@
         class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
         Dashboard
       </a>
-      <a href="#" 
-        class="{{ request()->routeIs('guest.tracker') ? 'active' : '' }}">
-        Guest Tracker
+      
+      {{-- UPDATED: Points to admin.visitors.index --}}
+      <a href="{{ route('admin.visitors.index') }}" 
+        class="{{ request()->routeIs('admin.visitors.*') ? 'active' : '' }}">
+        Assigned Volunteer
       </a>
+      
       <a href="{{ route('admin.users.index') }}" 
         class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
         User Roles & Access
       </a>
+      
       <a href="#" 
         class="{{ request()->routeIs('notifications') ? 'active' : '' }}">
         Notifications
       </a>
+      
       <a href="#" 
         class="{{ request()->routeIs('settings') ? 'active' : '' }}">
         Settings
@@ -31,10 +36,13 @@
         class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
         Dashboard
       </a>
+      
+      {{-- Placeholder for volunteer specific guest list --}}
       <a href="#" 
         class="{{ request()->routeIs('assigned.guests') ? 'active' : '' }}">
         Assigned Guest List
       </a>
+      
       <a href="#" 
         class="{{ request()->routeIs('notifications') ? 'active' : '' }}">
         Notifications
