@@ -9,14 +9,9 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('tbl_task_assignment', function (Blueprint $table) {
-      $table->id('task_assignment_id'); // standard bigIncrements
-
-      /**
-       * Use unsignedBigInteger to match Laravel's default id() type.
-       * If your parent tables use increments(), use unsignedInteger() instead.
-       */
-      $table->unsignedBigInteger('visitor_id');
-      $table->unsignedBigInteger('user_id');
+      $table->integer('task_assignment_id')->autoIncrement();
+      $table->integer('visitor_id');
+      $table->integer('user_id');
       $table->datetime('assigned_at');
 
       // Foreign Key Constraints

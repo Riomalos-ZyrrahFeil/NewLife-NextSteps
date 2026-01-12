@@ -6,8 +6,6 @@ function openAssignModal(id, name, currentVolunteerId) {
   if (unassignBtn) {
     unassignBtn.style.display = currentVolunteerId ? 'block' : 'none';
   }
-
-  // This was failing because of an extra '}' above this line
   document.getElementById('assignModal').style.display = 'flex';
   document.getElementById('volunteerSearch').focus();
 }

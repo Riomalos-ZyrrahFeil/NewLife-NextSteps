@@ -8,6 +8,7 @@ use App\Models\MessageStatus;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class VisitorsImport implements ToModel, WithHeadingRow
 {
@@ -28,8 +29,16 @@ class VisitorsImport implements ToModel, WithHeadingRow
       ? null 
       : $row['middle_name'];
 
+    // Handle Excel Date Conversion
     try {
-      $timestamp = Carbon::parse($row['timestamp']);
+      $rawTimestamp = $row['timestamp'];
+
+      if (is_numeric($rawTimestamp)) {
+        $timestamp = Carbon::instance(Date::excelToDateTimeObject($rawTimestamp));
+      } else {
+        $timestamp = Carbon::parse($rawTimestamp);
+      }
+      
       $firstVisitDate = $timestamp->toDateString();
       $firstVisitTime = $timestamp->toTimeString();
     } catch (\Exception $e) {

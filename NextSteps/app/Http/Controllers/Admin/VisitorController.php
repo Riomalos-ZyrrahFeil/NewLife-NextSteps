@@ -84,4 +84,19 @@ class VisitorController extends Controller
 
     return response()->json(['error' => 'No user selected'], 400);
   }
+
+  public function updateStatus(Request $request)
+  {
+    $request->validate([
+      'visitor_id' => 'required|exists:tbl_visitor,visitor_id',
+      'status'     => 'required|string'
+    ]);
+
+    \App\Models\MessageStatus::updateOrCreate(
+      ['visitor_id' => $request->visitor_id],
+      ['status' => $request->status]
+    );
+
+    return response()->json(['success' => true]);
+  }
 }

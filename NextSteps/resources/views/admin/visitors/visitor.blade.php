@@ -9,7 +9,7 @@
 @section('content')
 <div class="tracker-container">
   <div class="tracker-header">
-    <h2>Guest Tracker & Status View</h2>
+    <h2>Assigned Volunteer</h2>
   </div>
 
   <div class="action-bar">

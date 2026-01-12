@@ -9,6 +9,9 @@ class Visitor extends Model
     protected $table = 'tbl_visitor';
     protected $primaryKey = 'visitor_id';
     public $timestamps = false;
+    protected $casts = [
+      'first_visit_date' => 'date',
+    ];
 
     protected $fillable = [
         'last_name',

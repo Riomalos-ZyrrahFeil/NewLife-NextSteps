@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\VisitorController;
 use App\Models\User;
+use App\Http\Controllers\Admin\GuestTrackerController;
 
 // --- AUTHENTICATION ROUTES ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -38,6 +39,11 @@ Route::middleware('auth')->group(function () {
     // Volunteer Search for Modal
     Route::get('/volunteers/search', [UserController::class, 'search'])
       ->name('volunteers.search');
+
+    Route::get('/guest-tracker', [GuestTrackerController::class, 'index'])
+      ->name('guest_tracker.index');
+    Route::post('/guest-tracker/status', [GuestTrackerController::class, 'updateStatus'])
+        ->name('guest_tracker.status');
   });
 
   Route::get('/assigned-guests', [VisitorController::class, 'assignedList'])
