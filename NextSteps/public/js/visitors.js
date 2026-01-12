@@ -3,10 +3,11 @@ function openAssignModal(id, name, currentVolunteerId) {
   document.getElementById('modalVisitorName').innerText = 'Managing: ' + name;
   
   const unassignBtn = document.getElementById('btnUnassign');
-  if (unassignBtn) 
+  if (unassignBtn) {
     unassignBtn.style.display = currentVolunteerId ? 'block' : 'none';
   }
 
+  // This was failing because of an extra '}' above this line
   document.getElementById('assignModal').style.display = 'flex';
   document.getElementById('volunteerSearch').focus();
 }
@@ -19,14 +20,19 @@ function closeAssignModal() {
 
 function searchVolunteers() {
   let query = document.getElementById('volunteerSearch').value;
+  const loader = document.getElementById('searchLoader');
+
   if (query.length < 2) {
     document.getElementById('volunteerList').innerHTML = '';
     return;
   }
 
+  if (loader) loader.style.display = 'block';
+
   fetch(`/admin/volunteers/search?q=${encodeURIComponent(query)}`)
     .then(res => res.json())
     .then(data => {
+      if (loader) loader.style.display = 'none';
       let list = document.getElementById('volunteerList');
       list.innerHTML = data.map(v => `
         <li class="volunteer-item" onclick="assignTo(${v.user_id})">
