@@ -1,0 +1,68 @@
+:root {
+    --volunteer-primary: #10b981;
+    --volunteer-primary-dark: #059669;
+    --volunteer-bg: #f0fdf4;
+}
+
+.volunteer-body {
+    background-color: var(--volunteer-bg) !important;
+}
+
+.sidebar-nav a.volunteer-active {
+    background-color: var(--volunteer-primary) !important;
+    color: #ffffff !important;
+}
+
+.logo-circle.volunteer-brand {
+    background-color: var(--volunteer-primary);
+}
+
+.volunteer-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border-left: 5px solid var(--volunteer-primary);
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.volunteer-card h4 {
+    margin: 0 0 10px 0;
+    color: var(--volunteer-primary-dark);
+    font-size: 1.1rem;
+}
+
+.btn-volunteer-primary {
+    background-color: var(--volunteer-primary);
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-volunteer-primary:hover {
+    background-color: var(--volunteer-primary-dark);
+}
+
+.guest-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.guest-info .guest-name {
+    display: block;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.guest-info .guest-status {
+    font-size: 0.8rem;
+    color: #64748b;
+}

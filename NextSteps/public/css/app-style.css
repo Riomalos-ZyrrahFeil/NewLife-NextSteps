@@ -1,110 +1,178 @@
-/* General Layout & Colors */
-body { font-family: Arial, sans-serif; background-color: #f7f9fc; margin: 0; padding: 0; }
-.page-container { padding: 20px; }
-.user-management-panel {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
-    margin: 20px auto;
+body { 
+    font-family: 'Inter', Arial, sans-serif; 
+    background-color: #f7f9fc; 
+    margin: 0; 
+    padding: 0; 
+    color: #111827;
 }
 
-/* Header Controls (Search, Filter, Add Button) */
-.header-controls {
+.admin-wrapper { 
+    display: flex; 
+    min-height: 100vh; 
+}
+
+.page-container { 
+    flex-grow: 1; 
+    background-color: #f7f9fc;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-content-wrapper { 
+    padding: 30px 40px; 
+    flex-grow: 1; 
+    overflow-y: auto; 
+}
+
+.page-header-top {
+    background-color: #ffffff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-filter-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-input-wrapper { 
+    display: flex; 
+    align-items: center; 
+    flex-grow: 1; 
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    font-size: 0.95rem;
+}
+
+.btn-search {
+    margin-left: 10px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.filter-wrapper select {
+    padding: 10px 15px;
+    border: 2px solid #111827; 
+    border-radius: 10px;
+    background-color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111827;
+    cursor: pointer;
+    min-width: 180px;
+}
+
+.user-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    padding: 25px;
+}
+
+.table-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
 }
-.header-controls form, .header-controls select { margin-right: 15px; }
-.header-controls input[type="text"], .header-controls select {
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    width: 250px;
+
+.table-header-row h3 { 
+    margin: 0; 
+    font-size: 1.25rem; 
+    font-weight: 600; 
+    color: #111827; 
 }
-.button-primary {
-    background-color: #3b82f6; 
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
+
+.btn-add {
+    background-color: #2563eb;
+    color: white !important;
+    padding: 10px 22px;
+    border-radius: 10px;
     text-decoration: none;
-    font-weight: bold;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.custom-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+.custom-table th {
+    text-align: left;
+    color: #6b7280;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.custom-table td { 
+    padding: 15px 0; 
+    border-bottom: 1px solid #f9fafb; 
+    font-size: 0.9rem; 
+}
+
+.font-bold { font-weight: 600; color: #111827; }
+.text-secondary { color: #6b7280; }
+
+.badge { 
+    padding: 6px 14px; 
+    border-radius: 20px; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+}
+.badge-role.badge-admin { background-color: #f3e8ff; color: #7e22ce; }
+.badge-role.badge-volunteer { background-color: #f3f4f6; color: #4b5563; }
+.badge-status.badge-active { background-color: #dcfce7; color: #15803d; }
+.badge-status.badge-inactive { background-color: #fee2e2; color: #b91c1c; }
+
+.action-row { 
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.action-link { 
+    text-decoration: none; 
+    font-weight: 600; 
+    font-size: 0.85rem; 
     cursor: pointer;
 }
+.action-link.edit { color: #3b82f6; }
 
-/* Table Styling */
-h2 { font-size: 1.5rem; color: #333; margin-bottom: 20px; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.95rem; }
-thead th { background-color: #f4f6f8; color: #4b5563; padding: 12px 15px; text-align: left; border-bottom: 2px solid #ddd; font-weight: 600; }
-tbody td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
-
-/* Role & Status Tag Styling (External CSS only, no inline styles) */
-.role-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem; }
-.role-admin { background-color: #f3e8ff; color: #9333ea; }
-.role-volunteer { background-color: #e5e7eb; color: #4b5563; }
-.status-active { color: #10b981; }
-.status-inactive { color: #f97316; }
-
-/* Actions */
-.inline-form { display: inline; margin-left: 10px; }
-.actions a { color: #3b82f6; text-decoration: none; margin-right: 10px; }
-.actions button { color: #ef4444; background: none; border: none; padding: 0; cursor: pointer; font-size: 0.95rem; }
-
-/* ADD TO public/css/app-style.css */
-
-.back-link { display: inline-block; margin-bottom: 20px; color: #3b82f6; text-decoration: none; }
-
-.crud-form { padding: 20px 0; max-width: 500px; }
-.form-group { margin-bottom: 15px; }
-
-.form-group label {
-    display: block;
+.delete-user-trigger {
+    color: #ef4444; 
+    border: none; 
+    background: none; 
+    padding: 0; 
+    cursor: pointer;
     font-weight: 600;
-    margin-bottom: 5px;
-    color: #4b5563;
-}
-
-.crud-form input[type="text"], 
-.crud-form input[type="email"], 
-.crud-form input[type="password"],
-.crud-form select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.error-message {
-    color: #ef4444; /* Red */
     font-size: 0.85rem;
-    margin-top: 5px;
-    display: block;
+    font-family: inherit;
+    transition: opacity 0.2s;
 }
 
-.password-note {
-    font-style: italic;
-    color: #666;
-    margin-top: -10px;
-}
-
-.submit-btn {
-    width: auto;
-    min-width: 150px;
-    margin-top: 20px;
-}
-
-.alert-danger {
-    background-color: #fee2e2;
-    color: #dc2626;
-    border: 1px solid #fca5a5;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
+.delete-user-trigger:hover {
+    text-decoration: underline;
+    opacity: 0.8;
 }

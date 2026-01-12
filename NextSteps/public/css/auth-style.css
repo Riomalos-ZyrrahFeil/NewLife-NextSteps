@@ -1,16 +1,23 @@
-/* Styling based on image_02d1e3.png */
 .guest-body {
     background: linear-gradient(135deg, #1e1e2d 0%, #000000 100%);
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.guest-centered-main {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.login-card-container {
+    width: 100%;
+    max-width: 400px;
 }
 
 .login-card {
-    width: 380px;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -83,3 +90,21 @@
 
 .signup-link { text-align: center; margin-top: 25px; }
 .signup-link a { color: #3b3b54; text-decoration: none; font-size: 0.9rem; }
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 5px;
+    display: block;
+}
+
+.input-group input.is-invalid {
+    border: 1.5px solid #ef4444 !important;
+    background-color: #fff5f5;
+}
+
+.input-group input.is-invalid:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}   
