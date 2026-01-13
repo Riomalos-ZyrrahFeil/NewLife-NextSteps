@@ -6,8 +6,6 @@ function openAssignModal(id, name, currentVolunteerId) {
   if (unassignBtn) {
     unassignBtn.style.display = currentVolunteerId ? 'block' : 'none';
   }
-
-  // This was failing because of an extra '}' above this line
   document.getElementById('assignModal').style.display = 'flex';
   document.getElementById('volunteerSearch').focus();
 }
@@ -43,21 +41,31 @@ function searchVolunteers() {
     });
 }
 
-function assignTo(volunteerId) {
+function assignTo(userId) {
   const visitorId = document.getElementById('modalVisitorId').value;
-  const token = document.querySelector('meta[name="csrf-token"]').content;
 
-  fetch('/admin/visitors/assign', {
-    method: 'POST',
+  if (!userId && userId !== null) {
+    alert("Please select a volunteer first.");
+    return;
+  }
+
+  fetch("/admin/visitors/assign", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': token
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
     },
-    body: JSON.stringify({ 
-      visitor_id: visitorId, 
-      user_id: volunteerId
+    body: JSON.stringify({
+      visitor_id: visitorId,
+      user_id: userId
     })
-  }).then(res => {
-    if (res.ok) window.location.reload();
-  });
+  })
+  .then(res => {
+    if (res.status === 400) throw new Error("No user selected");
+    return res.json();
+  })
+  .then(data => {
+    if (data.success) location.reload();
+  })
+  .catch(err => console.error("Assignment Error:", err.message));
 }

@@ -9,7 +9,7 @@
 @section('content')
 <div class="tracker-container">
   <div class="tracker-header">
-    <h2>Guest Tracker & Status View</h2>
+    <h2>Assigned Volunteer</h2>
   </div>
 
   <div class="action-bar">
@@ -51,6 +51,33 @@
       </thead>
       <tbody>
         @foreach($visitors as $visitor)
+          @php
+            // Dynamic Stage Calculation
+            $vDate = \Carbon\Carbon::parse($visitor->first_visit_date);
+            $elapsed = $vDate->diffInDays(now());
+
+            $currentStage = $stages->where('day_offset', '<=', $elapsed)
+                                  ->sortByDesc('day_offset')
+                                  ->first();
+            
+            $displayStage = $currentStage ? $currentStage->stage_name : 'Day 1';
+            $stageId = $currentStage->follow_up_stage_id ?? 
+                      ($stages->first()->follow_up_stage_id ?? null);
+
+            $stRecord = $visitor->stageStatuses
+                                ->where('follow_up_stage_id', $stageId)
+                                ->first();
+            $rawStatus = $stRecord->status ?? 'not texted';
+            $status = strtolower($rawStatus);
+            
+            $class = match($status) {
+              'responded' => 'status-responded',
+              'cant contact' => 'status-cant-contact',
+              'connected' => 'status-connected',
+              'texted' => 'status-texted',
+              default => 'status-not-texted'
+            };
+          @endphp
           <tr>
             <td>
               <div class="name-cell">
@@ -65,29 +92,20 @@
             </td>
             <td>{{ $visitor->contact_number ?? 'N/A' }}</td>
             <td>
-              {{ \Carbon\Carbon::parse($visitor->first_visit_date)
-                  ->format('M j, Y') }}<br>
-              <small class="visit-day">
-                {{ \Carbon\Carbon::parse($visitor->first_visit_date)
-                    ->format('l') }}
-              </small>
+              {{ $vDate->format('M j, Y') }}<br>
+              <small class="visit-day">{{ $vDate->format('l') }}</small>
             </td>
             <td>
-              Day 5<br>
-              <a href="#" class="action-link">View Tracker</a>
+              <div class="follow-up-info">
+                <span class="stage-text">{{ $displayStage }}</span><br>
+                <a href="{{ route('admin.guest_tracker.index', [
+                    'search' => $visitor->first_name . ' ' . $visitor->last_name
+                  ]) }}" class="view-tracker-link">
+                  View Tracker
+                </a>
+              </div>
             </td>
             <td>
-              @php
-                $rawStatus = $visitor->messageStatus->status ?? 'not texted';
-                $status = strtolower($rawStatus);
-                $class = match($status) {
-                  'responded' => 'status-responded',
-                  'cant contact' => 'status-cant-contact',
-                  'connected' => 'status-connected',
-                  'texted' => 'status-texted',
-                  default => 'status-not-texted'
-                };
-              @endphp
               <span class="status-pill {{ $class }}">
                 {{ ucwords($rawStatus) }}
               </span>
@@ -120,16 +138,13 @@
   </div>
 </div>
 
-{{-- Assignment Modal --}}
 <div id="assignModal" class="modal-overlay" style="display:none;">
   <div class="modal-content assignment-modal">
     <div class="modal-header">
       <h3>Manage Assignment</h3>
       <p id="modalVisitorName" class="visitor-subtext"></p>
     </div>
-    
     <input type="hidden" id="modalVisitorId">
-    
     <div class="search-constrain-wrapper">
       <div class="modal-search-wrapper">
         <input type="text" id="volunteerSearch" 
@@ -137,12 +152,10 @@
           class="search-input" onkeyup="searchVolunteers()">
         <div id="searchLoader" class="loader-inner" style="display:none;"></div>
       </div>
-
       <div class="results-container">
         <ul id="volunteerList" class="volunteer-results"></ul>
       </div>
     </div>
-
     <div class="modal-actions">
       <button id="btnUnassign" onclick="assignTo(null)" 
         class="btn-unassign" style="display: none;">
