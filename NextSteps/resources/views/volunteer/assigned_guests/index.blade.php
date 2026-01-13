@@ -7,14 +7,14 @@
 
 @section('content')
 <div class="tracker-container">
-  <div class="tracker-header"><h2>Guest Tracker</h2></div>
+  <div class="tracker-header"><h2>My Assigned Guests</h2></div>
 
-  {{-- Search Box --}}
   <div class="search-header-box">
     <div class="search-container">
-      <form action="{{ route('admin.guest_tracker.index') }}" method="GET">
+      <form action="{{ route('volunteer.assigned_guests.index') }}" 
+            method="GET">
         <input type="text" name="search" value="{{ request('search') }}"
-               placeholder="Search..." class="search-input"
+               placeholder="Search my guests..." class="search-input"
                onchange="this.form.submit()">
       </form>
     </div>
@@ -29,7 +29,7 @@
           @foreach($stages as $stage)
             <th class="text-center">{{ strtoupper($stage->stage_name) }}</th>
           @endforeach
-          <th class="text-center">ACTIONS</th>
+          <th class="text-center">SCRIPT</th>
         </tr>
       </thead>
       <tbody>
@@ -51,9 +51,7 @@
               </div>
             </td>
             <td>
-              <div class="contact-number">
-                {{ $visitor->contact_number ?? 'N/A' }}
-              </div>
+              <div class="contact-number">{{ $visitor->contact_number }}</div>
             </td>
             @foreach($stages as $stage)
               @php
@@ -72,8 +70,8 @@
                       {{ ucwords($val) }}
                     </div>
                     <select class="inline-status-select" style="display:none;" 
-                            onchange="updStat({{ $visitor->visitor_id }}, 
-                                      this, {{ $stage->follow_up_stage_id }})">
+                            onchange="updStat({{ $visitor->visitor_id }},
+                                      this,{{ $stage->follow_up_stage_id }})">
                       @foreach(['not texted','texted','responded',
                                 'connected','cant contact'] as $o)
                         <option value="{{ $o }}" 
@@ -92,7 +90,7 @@
               <button type="button" class="btn-view-script" 
                       onclick="openScriptModal('{{ $visitor->first_name }}', 
                       {{ $elapsed }}, '{{ Auth::user()->first_name }}')">
-                View Script
+                View
               </button>
             </td>
           </tr>
@@ -128,39 +126,36 @@
 </div>
 
 <script>
-  // --- TEMPLATES ---
   const templates = {
-    1: (n, s) => `Hi ${n}! This is ${s} from New Life Main. It was ` +
-      `great having you with us yesterday! We’d love to know—what stood ` +
-      `out to you the most from the service? 😊 If you’d like to get ` +
-      `connected to a Life Group or enroll in our free LIFE Classes, ` +
-      `just let me know! Also, if there’s anything we can pray for, ` +
-      `feel free to reply. Hope to see you again soon!`,
+    1: (n, s) => `Hi ${n}! This is ${s} from New Life Main. It was great ` +
+      `having you with us yesterday! We’d love to know—what stood out to ` +
+      `you the most from the service? 😊 If you’d like to get connected to ` +
+      `a Life Group or enroll in our free LIFE Classes, just let me know! ` +
+      `Also, if there’s anything we can pray for, feel free to reply. ` +
+      `Hope to see you again soon!`,
     5: (n, s) => `Hi ${n}! We’d love to see you again this Sunday, ` +
       `[Insert Date]. Let us know if you need any information —parking, ` +
-      `kids’ church, or anything else! Our cafe, 5&2 is open as early ` +
-      `as 7am. :) Praying for you and excited to see you again! - ${s}`,
-    10: (n, s) => `Hi! This is ${s} from New Life. We were thinking of ` +
-      `you! It's been 2 weeks since you first visited us. Just wanted to ` +
-      `check in—have you been able to come back to church since then? 😄 ` +
-      `No worries if not, we just wanted to say hi and see how you're ` +
-      `doing. If you're up for joining a Life Group or checking out Link ` +
-      `Class, we can help you get started. Want us to send you some info? ` +
-      `Also, if you have any prayer requests, please feel free to send ` +
-      `it my way! See you soon!`,
+      `kids’ church, or anything else! Our cafe, 5&2 is open as early as ` +
+      `7am. :) Praying for you and excited to see you again! - ${s}`,
+    10: (n, s) => `Hi! This is ${s} from New Life. We were thinking of you! ` +
+      `It's been 2 weeks since you first visited us. Just wanted to check ` +
+      `in—have you been able to come back to church since then? 😄 No ` +
+      `worries if not, we just wanted to say hi and see how you're doing. ` +
+      `If you're up for joining a Life Group or checking out Link Class, ` +
+      `we can help you get started. Want us to send you some info? Also, ` +
+      `if you have any prayer requests, please feel free to send it my way! ` +
+      `See you soon!`,
     30: (n, s) => `Hi! This is ${s} from New Life. It’s been a month since ` +
-      `your first visit—how has your journey been so far? We’d love to ` +
-      `help you get more connected, whether through a Life Group, ` +
-      `serving, or joining a Life Class. If you are already connected, ` +
-      `can you let us know what ministry you’ve joined, class you’ve ` +
-      `attended or your Life Group leader’s name? We celebrate you! :)`
+      `your first visit—how has your journey been so far? We’d love to help ` +
+      `you get more connected, whether through a Life Group, serving, or ` +
+      `joining a Life Class. If you are already connected, can you let us ` +
+      `know what ministry you’ve joined, class you’ve attended or your Life ` +
+      `Group leader’s name? We celebrate you! :)`
   };
 
-  // --- MODAL FUNCTIONS ---
   function openScriptModal(guestName, elapsed, senderName) {
     let offset = 1;
-    let days = Math.floor(elapsed); 
-
+    let days = Math.floor(elapsed);
     if (days >= 30) offset = 30;
     else if (days >= 10) offset = 10;
     else if (days >= 5) offset = 5;
@@ -183,19 +178,16 @@
     alert('Message copied to clipboard!');
   }
 
-  // --- TRACKING FUNCTIONS ---
   function toggleDropdown(p) {
     const w = p.closest('.status-cell-wrapper');
     const s = w.querySelector('.inline-status-select');
-    p.style.display = 'none';
-    s.style.display = 'block';
-    s.focus();
+    p.style.display = 'none'; s.style.display = 'block'; s.focus();
   }
 
   function updStat(id, sel, stageId) {
     const stat = sel.value;
     const p = sel.closest('.status-cell-wrapper').querySelector('.status-pill');
-    fetch("{{ route('admin.guest_tracker.status') }}", {
+    fetch("{{ route('volunteer.assigned_guests.status') }}", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -205,8 +197,7 @@
     }).then(res => res.json()).then(() => {
       p.innerText = stat.charAt(0).toUpperCase() + stat.slice(1);
       p.className = `status-pill status-${stat.replace(' ', '-')}`;
-      sel.style.display = 'none';
-      p.style.display = 'inline-block';
+      sel.style.display = 'none'; p.style.display = 'inline-block';
     });
   }
 </script>

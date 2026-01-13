@@ -42,9 +42,9 @@
         Dashboard
       </a>
 
-      <a href="#" 
-        class="{{ request()->routeIs('assigned.guests') ? 'active' : '' }}">
-        Assigned Guest List
+      <a href="{{ route('volunteer.assigned_guests.index') }}" 
+          class="nav-link {{ request()->routeIs('volunteer.assigned_guests.*') ? 'active' : '' }}">
+          <i class="fas fa-users mr-2"></i> Assigned Guests
       </a>
       
       <a href="#" 

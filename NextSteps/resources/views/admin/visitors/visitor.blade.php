@@ -55,8 +55,7 @@
             // Dynamic Stage Calculation
             $vDate = \Carbon\Carbon::parse($visitor->first_visit_date);
             $elapsed = $vDate->diffInDays(now());
-            
-            // Hanapin ang pinakahuling stage na 'due' na
+
             $currentStage = $stages->where('day_offset', '<=', $elapsed)
                                   ->sortByDesc('day_offset')
                                   ->first();
@@ -65,7 +64,6 @@
             $stageId = $currentStage->follow_up_stage_id ?? 
                       ($stages->first()->follow_up_stage_id ?? null);
 
-            // Sync status sa current stage ID
             $stRecord = $visitor->stageStatuses
                                 ->where('follow_up_stage_id', $stageId)
                                 ->first();
@@ -98,7 +96,6 @@
               <small class="visit-day">{{ $vDate->format('l') }}</small>
             </td>
             <td>
-              {{-- Inalis ang hardcoded na Day 5 --}}
               <div class="follow-up-info">
                 <span class="stage-text">{{ $displayStage }}</span><br>
                 <a href="{{ route('admin.guest_tracker.index', [
@@ -141,7 +138,6 @@
   </div>
 </div>
 
-{{-- Assignment Modal (Nanatiling pareho) --}}
 <div id="assignModal" class="modal-overlay" style="display:none;">
   <div class="modal-content assignment-modal">
     <div class="modal-header">

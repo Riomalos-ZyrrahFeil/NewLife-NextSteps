@@ -60,4 +60,9 @@ class Visitor extends Model
     {
         return $this->hasMany(MessageStatus::class, 'visitor_id', 'visitor_id');
     }
+
+    public function taskAssignments()
+    {
+        return $this->hasMany(TaskAssignment::class, 'visitor_id', 'visitor_id');
+    }
 }

@@ -2,7 +2,6 @@
 
 @section('content')
 
-{{-- 1. Top Search & Filter Bar --}}
 <div class="page-header-top">
   <form method="GET"
         action="{{ route('admin.users.index') }}"
@@ -66,8 +65,6 @@
         <td class="actions">
           <div class="action-row">
             <a href="{{ route('admin.users.edit', $user) }}" class="action-link edit">Edit</a>
-            
-            {{-- UPDATED: Reverted to direct form submission with native alert --}}
             <form action="{{ route('admin.users.destroy', $user) }}"
                   method="POST"
                   class="inline-form" 
