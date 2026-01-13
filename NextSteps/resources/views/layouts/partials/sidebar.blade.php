@@ -32,8 +32,8 @@
         Notifications
       </a>
       
-      <a href="#" 
-        class="{{ request()->routeIs('settings') ? 'active' : '' }}">
+      <a href="{{ route('admin.settings.index') }}" 
+        class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
         Settings
       </a>
     @else

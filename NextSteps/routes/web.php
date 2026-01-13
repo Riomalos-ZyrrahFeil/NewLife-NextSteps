@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Admin\GuestTrackerController;
 use App\Http\Controllers\Volunteer\AssignedGuestController;
 use App\Models\User;
+use App\Http\Controllers\SettingsController;
 
 // --- AUTHENTICATION ROUTES ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -41,6 +42,22 @@ Route::middleware('auth')->group(function () {
         // Search for Modal
         Route::get('/volunteers/search', [UserController::class, 'search'])
             ->name('volunteers.search');
+
+    // Guest Tracker
+    Route::get('/guest-tracker', [GuestTrackerController::class, 'index'])
+      ->name('guest_tracker.index');
+    Route::post('/guest-tracker/status', [GuestTrackerController::class, 'updateStatus'])
+        ->name('guest_tracker.status');
+
+    // BACKUP & RESTORE
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::get('/settings/backup', [SettingsController::class, 'backup'])->name('settings.backup');
+    Route::post('/settings/restore', [SettingsController::class, 'restore'])->name('settings.restore');
+    
+    // General Config
+    Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.updateProfile');
+    Route::put('/settings/password', [SettingsController::class, 'changePassword'])->name('settings.changePassword');
+    Route::delete('/settings/account', [SettingsController::class, 'deleteAccount'])->name('settings.deleteAccount');
 
         // Guest Tracker
         Route::get('/guest-tracker', [GuestTrackerController::class, 'index'])
